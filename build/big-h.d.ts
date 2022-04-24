@@ -1,7 +1,8 @@
 import { HLike, H } from 'interfaces';
+import { Big } from 'big.js';
 export declare class BigH implements HLike<BigH> {
-    private readonly value;
-    private constructor();
+    private big;
+    constructor(source: H.Source<BigH> | Big);
     plus(x: H.Source<BigH>): BigH;
     minus(x: H.Source<BigH>): BigH;
     times(x: H.Source<BigH>): BigH;
@@ -18,7 +19,6 @@ export declare class BigH implements HLike<BigH> {
     toString(): string;
     toFixed(decimalPoint?: number): string;
     private capture;
-    static from(source: H.Snapshot): BigH;
     static capture(x: BigH): H.Snapshot;
     static restore(s: H.Snapshot): BigH;
     static min(x: BigH, ...rest: BigH[]): BigH;

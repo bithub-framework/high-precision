@@ -12,88 +12,91 @@ const interfaces_1 = require("interfaces");
 const big_js_1 = require("big.js");
 const statically_implements_1 = require("./statically-implements");
 let BigH = BigH_1 = class BigH {
-    constructor(big) {
-        this.value = big;
+    constructor(source) {
+        if (source instanceof BigH_1)
+            this.big = source.big;
+        else
+            this.big = new big_js_1.Big(source);
     }
     plus(x) {
         if (typeof x === 'number')
-            return new BigH_1(this.value.plus(x));
+            return new BigH_1(this.big.plus(x));
         if (typeof x === 'string')
-            return new BigH_1(this.value.plus(x));
-        return new BigH_1(this.value.plus(x.value));
+            return new BigH_1(this.big.plus(x));
+        return new BigH_1(this.big.plus(x.big));
     }
     minus(x) {
         if (typeof x === 'number')
-            return new BigH_1(this.value.minus(x));
+            return new BigH_1(this.big.minus(x));
         if (typeof x === 'string')
-            return new BigH_1(this.value.minus(x));
-        return new BigH_1(this.value.minus(x.value));
+            return new BigH_1(this.big.minus(x));
+        return new BigH_1(this.big.minus(x.big));
     }
     times(x) {
         if (typeof x === 'number')
-            return new BigH_1(this.value.times(x));
+            return new BigH_1(this.big.times(x));
         if (typeof x === 'string')
-            return new BigH_1(this.value.times(x));
-        return new BigH_1(this.value.times(x.value));
+            return new BigH_1(this.big.times(x));
+        return new BigH_1(this.big.times(x.big));
     }
     div(x) {
         if (typeof x === 'number')
-            return new BigH_1(this.value.div(x));
+            return new BigH_1(this.big.div(x));
         if (typeof x === 'string')
-            return new BigH_1(this.value.div(x));
-        return new BigH_1(this.value.div(x.value));
+            return new BigH_1(this.big.div(x));
+        return new BigH_1(this.big.div(x.big));
     }
     mod(x) {
         if (typeof x === 'number')
-            return new BigH_1(this.value.mod(x));
+            return new BigH_1(this.big.mod(x));
         if (typeof x === 'string')
-            return new BigH_1(this.value.mod(x));
-        return new BigH_1(this.value.mod(x.value));
+            return new BigH_1(this.big.mod(x));
+        return new BigH_1(this.big.mod(x.big));
     }
     lt(x) {
         if (typeof x === 'number')
-            return this.value.lt(x);
+            return this.big.lt(x);
         if (typeof x === 'string')
-            return this.value.lt(x);
-        return this.value.lt(x.value);
+            return this.big.lt(x);
+        return this.big.lt(x.big);
     }
     lte(x) {
         if (typeof x === 'number')
-            return this.value.lte(x);
+            return this.big.lte(x);
         if (typeof x === 'string')
-            return this.value.lte(x);
-        return this.value.lte(x.value);
+            return this.big.lte(x);
+        return this.big.lte(x.big);
     }
     gt(x) {
         if (typeof x === 'number')
-            return this.value.gt(x);
+            return this.big.gt(x);
         if (typeof x === 'string')
-            return this.value.gt(x);
-        return this.value.gt(x.value);
+            return this.big.gt(x);
+        return this.big.gt(x.big);
     }
     gte(x) {
         if (typeof x === 'number')
-            return this.value.gte(x);
+            return this.big.gte(x);
         if (typeof x === 'string')
-            return this.value.gte(x);
-        return this.value.gte(x.value);
+            return this.big.gte(x);
+        return this.big.gte(x.big);
     }
     eq(x) {
         if (typeof x === 'number')
-            return this.value.eq(x);
+            return this.big.eq(x);
         if (typeof x === 'string')
-            return this.value.eq(x);
-        return this.value.eq(x.value);
+            return this.big.eq(x);
+        return this.big.eq(x.big);
     }
     neq(x) {
         if (typeof x === 'number')
-            return !this.value.eq(x);
+            return !this.big.eq(x);
         if (typeof x === 'string')
-            return !this.value.eq(x);
-        return !this.value.eq(x.value);
+            return !this.big.eq(x);
+        return !this.big.eq(x.big);
     }
     round(decimalPoint = 0, roundingMode = interfaces_1.H.RoundingMode.HALF_AWAY_FROM_ZERO) {
-        return new BigH_1(new big_js_1.Big(this.value).round(decimalPoint, roundingMode === interfaces_1.H.RoundingMode.AWAY_FROM_ZERO
+        return new BigH_1(new big_js_1.Big(this.big).round(decimalPoint, roundingMode === interfaces_1.H.RoundingMode.AWAY_FROM_ZERO
             ? big_js_1.Big.roundUp
             : roundingMode === interfaces_1.H.RoundingMode.TOWARDS_ZERO
                 ? big_js_1.Big.roundDown
@@ -103,16 +106,13 @@ let BigH = BigH_1 = class BigH {
         throw new Error('Use .capture() instead.');
     }
     toString() {
-        return this.value.toString();
+        return this.big.toString();
     }
     toFixed(decimalPoint = 0) {
-        return this.value.toFixed(decimalPoint, big_js_1.Big.roundDown);
+        return this.big.toFixed(decimalPoint, big_js_1.Big.roundDown);
     }
     capture() {
-        return this.value.toString();
-    }
-    static from(source) {
-        return new BigH_1(new big_js_1.Big(source));
+        return this.big.toString();
     }
     static capture(x) {
         return x.capture();
