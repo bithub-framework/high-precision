@@ -12,6 +12,6 @@
   "dependencies": {
     "@types/big.js": "^6.1.3",
     "big.js": "^6.1.1",
-    "interfaces": "github:bithub-framework/interfaces"
+    "secretary-like": "github:bithub-framework/secretary-like"
   }
 }

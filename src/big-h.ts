@@ -1,4 +1,4 @@
-import { HLike, H, HStatic } from 'interfaces';
+import { HLike, H, HStatic } from 'secretary-like';
 import { Big } from 'big.js';
 import { staticallyImplements } from './statically-implements';
 
@@ -94,12 +94,8 @@ export class BigH implements HLike<BigH> {
 		));
 	}
 
-	public toJSON(): never {
-		throw new Error('Use .capture() instead.');
-	}
-
-	public toString(): string {
-		return this.big.toString();
+	public toJSON(): string {
+		return this.big.toJSON();
 	}
 
 	public toFixed(decimalPoint = 0): string {
@@ -110,7 +106,7 @@ export class BigH implements HLike<BigH> {
 	}
 
 	private capture(): H.Snapshot {
-		return this.big.toString();
+		return this.big.toJSON();
 	}
 
 	public static capture(x: BigH): H.Snapshot {

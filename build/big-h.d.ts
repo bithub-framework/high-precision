@@ -1,4 +1,4 @@
-import { HLike, H } from 'interfaces';
+import { HLike, H } from 'secretary-like';
 import { Big } from 'big.js';
 export declare class BigH implements HLike<BigH> {
     private big;
@@ -15,8 +15,7 @@ export declare class BigH implements HLike<BigH> {
     eq(x: H.Source<BigH>): boolean;
     neq(x: H.Source<BigH>): boolean;
     round(decimalPoint?: number, roundingMode?: H.RoundingMode): BigH;
-    toJSON(): never;
-    toString(): string;
+    toJSON(): string;
     toFixed(decimalPoint?: number): string;
     private capture;
     static capture(x: BigH): H.Snapshot;

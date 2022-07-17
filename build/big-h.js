@@ -8,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var BigH_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BigH = void 0;
-const interfaces_1 = require("interfaces");
+const secretary_like_1 = require("secretary-like");
 const big_js_1 = require("big.js");
 const statically_implements_1 = require("./statically-implements");
 let BigH = BigH_1 = class BigH {
@@ -95,24 +95,21 @@ let BigH = BigH_1 = class BigH {
             return !this.big.eq(x);
         return !this.big.eq(x.big);
     }
-    round(decimalPoint = 0, roundingMode = interfaces_1.H.RoundingMode.HALF_AWAY_FROM_ZERO) {
-        return new BigH_1(new big_js_1.Big(this.big).round(decimalPoint, roundingMode === interfaces_1.H.RoundingMode.AWAY_FROM_ZERO
+    round(decimalPoint = 0, roundingMode = secretary_like_1.H.RoundingMode.HALF_AWAY_FROM_ZERO) {
+        return new BigH_1(new big_js_1.Big(this.big).round(decimalPoint, roundingMode === secretary_like_1.H.RoundingMode.AWAY_FROM_ZERO
             ? big_js_1.Big.roundUp
-            : roundingMode === interfaces_1.H.RoundingMode.TOWARDS_ZERO
+            : roundingMode === secretary_like_1.H.RoundingMode.TOWARDS_ZERO
                 ? big_js_1.Big.roundDown
                 : big_js_1.Big.roundHalfUp));
     }
     toJSON() {
-        throw new Error('Use .capture() instead.');
-    }
-    toString() {
-        return this.big.toString();
+        return this.big.toJSON();
     }
     toFixed(decimalPoint = 0) {
         return this.big.toFixed(decimalPoint, big_js_1.Big.roundDown);
     }
     capture() {
-        return this.big.toString();
+        return this.big.toJSON();
     }
     static capture(x) {
         return x.capture();
