@@ -1,10 +1,14 @@
 import { BigH } from './big-h';
-import { HStatic, H } from 'secretary-like';
+import { HFactory, H } from 'secretary-like';
 
 
-export class BigHStatic extends HStatic<BigH> {
+export class BigHFactory implements HFactory<BigH> {
 	public from(source: H.Source<BigH>): BigH {
 		return new BigH(source);
+	}
+
+	public capture(x: BigH): string {
+		return x.toJSON();
 	}
 
 	public restore(snapshot: string): BigH {

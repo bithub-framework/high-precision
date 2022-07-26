@@ -1,15 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BigHStatic = void 0;
+exports.BigHFactory = void 0;
 const big_h_1 = require("./big-h");
-const secretary_like_1 = require("secretary-like");
-class BigHStatic extends secretary_like_1.HStatic {
+class BigHFactory {
     from(source) {
         return new big_h_1.BigH(source);
+    }
+    capture(x) {
+        return x.toJSON();
     }
     restore(snapshot) {
         return this.from(snapshot);
     }
 }
-exports.BigHStatic = BigHStatic;
-//# sourceMappingURL=big-h-static.js.map
+exports.BigHFactory = BigHFactory;
+//# sourceMappingURL=big-h-factory.js.map

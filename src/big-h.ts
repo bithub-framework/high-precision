@@ -3,6 +3,7 @@ import { Big } from 'big.js';
 import { staticallyImplements } from './statically-implements';
 
 
+@staticallyImplements<HStatic<BigH>>()
 export class BigH implements HLike<BigH> {
 	private big: Big;
 
@@ -23,6 +24,10 @@ export class BigH implements HLike<BigH> {
 		if (typeof x === 'number') return new BigH(this.big.minus(x));
 		if (typeof x === 'string') return new BigH(this.big.minus(x));
 		return new BigH(this.big.minus(x.big));
+	}
+
+	public neg(): BigH {
+		return new BigH(new Big(0).minus(this.big));
 	}
 
 	public times(x: H.Source<BigH>): BigH {
@@ -104,15 +109,27 @@ export class BigH implements HLike<BigH> {
 		);
 	}
 
-	private capture(): H.Snapshot {
-		return this.big.toJSON();
+	public static max(x: BigH, ...rest: BigH[]): BigH {
+		return [x, ...rest].reduce(
+			(x, y) => x.gt(y) ? x : y,
+		);
 	}
 
-	public static capture(x: BigH): H.Snapshot {
-		return x.capture();
+	public static min(x: BigH, ...rest: BigH[]): BigH {
+		return [x, ...rest].reduce(
+			(x, y) => x.lt(y) ? x : y,
+		);
 	}
 
-	public static restore(s: H.Snapshot): BigH {
-		return new BigH(new Big(s));
-	}
+	// private capture(): H.Snapshot {
+	// 	return this.big.toJSON();
+	// }
+
+	// public static capture(x: BigH): H.Snapshot {
+	// 	return x.capture();
+	// }
+
+	// public static restore(s: H.Snapshot): BigH {
+	// 	return new BigH(new Big(s));
+	// }
 }

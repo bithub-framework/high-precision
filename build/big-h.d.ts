@@ -5,6 +5,7 @@ export declare class BigH implements HLike<BigH> {
     constructor(source: H.Source<BigH> | Big);
     plus(x: H.Source<BigH>): BigH;
     minus(x: H.Source<BigH>): BigH;
+    neg(): BigH;
     times(x: H.Source<BigH>): BigH;
     div(x: H.Source<BigH>): BigH;
     mod(x: H.Source<BigH>): BigH;
@@ -17,7 +18,6 @@ export declare class BigH implements HLike<BigH> {
     round(decimalPoint?: number, roundingMode?: H.RoundingMode): BigH;
     toJSON(): string;
     toFixed(decimalPoint?: number): string;
-    private capture;
-    static capture(x: BigH): H.Snapshot;
-    static restore(s: H.Snapshot): BigH;
+    static max(x: BigH, ...rest: BigH[]): BigH;
+    static min(x: BigH, ...rest: BigH[]): BigH;
 }
