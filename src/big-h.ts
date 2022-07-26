@@ -3,7 +3,6 @@ import { Big } from 'big.js';
 import { staticallyImplements } from './statically-implements';
 
 
-@staticallyImplements<HStatic<BigH>>()
 export class BigH implements HLike<BigH> {
 	private big: Big;
 
@@ -115,17 +114,5 @@ export class BigH implements HLike<BigH> {
 
 	public static restore(s: H.Snapshot): BigH {
 		return new BigH(new Big(s));
-	}
-
-	public static min(x: BigH, ...rest: BigH[]): BigH {
-		return [x, ...rest].reduce(
-			(x, y) => x.lt(y) ? x : y,
-		);
-	}
-
-	public static max(x: BigH, ...rest: BigH[]): BigH {
-		return [x, ...rest].reduce(
-			(x, y) => x.gt(y) ? x : y,
-		);
 	}
 }

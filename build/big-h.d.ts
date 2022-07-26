@@ -20,6 +20,4 @@ export declare class BigH implements HLike<BigH> {
     private capture;
     static capture(x: BigH): H.Snapshot;
     static restore(s: H.Snapshot): BigH;
-    static min(x: BigH, ...rest: BigH[]): BigH;
-    static max(x: BigH, ...rest: BigH[]): BigH;
 }
