@@ -67,12 +67,11 @@ let BigDecimalH = BigDecimalH_1 = class BigDecimalH {
         return this.bigDecimal.compareTo(x.bigDecimal) !== 0;
     }
     round(scale = 0, roundingMode = secretary_like_1.H.RoundingMode.HALF_AWAY_FROM_ZERO) {
-        const mathContext = new bigdecimal_js_1.MC(scale, roundingMode === secretary_like_1.H.RoundingMode.AWAY_FROM_ZERO
+        return new BigDecimalH_1(this.bigDecimal.setScale(scale, roundingMode === secretary_like_1.H.RoundingMode.AWAY_FROM_ZERO
             ? bigdecimal_js_1.RoundingMode.UP
             : roundingMode === secretary_like_1.H.RoundingMode.TOWARDS_ZERO
                 ? bigdecimal_js_1.RoundingMode.DOWN
-                : bigdecimal_js_1.RoundingMode.HALF_UP);
-        return new BigDecimalH_1(this.bigDecimal.round(mathContext));
+                : bigdecimal_js_1.RoundingMode.HALF_UP));
     }
     toJSON() {
         return this.bigDecimal.toString();

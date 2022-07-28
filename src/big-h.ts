@@ -89,16 +89,15 @@ export class BigDecimalH implements HLike<BigDecimalH> {
 		scale = 0,
 		roundingMode = H.RoundingMode.HALF_AWAY_FROM_ZERO
 	): BigDecimalH {
-		const mathContext = new MC(
-			scale,
-			roundingMode === H.RoundingMode.AWAY_FROM_ZERO
-				? RoundingMode.UP
-				: roundingMode === H.RoundingMode.TOWARDS_ZERO
-					? RoundingMode.DOWN
-					: RoundingMode.HALF_UP,
-		);
 		return new BigDecimalH(
-			this.bigDecimal.round(mathContext),
+			this.bigDecimal.setScale(
+				scale,
+				roundingMode === H.RoundingMode.AWAY_FROM_ZERO
+					? RoundingMode.UP
+					: roundingMode === H.RoundingMode.TOWARDS_ZERO
+						? RoundingMode.DOWN
+						: RoundingMode.HALF_UP,
+			),
 		);
 	}
 
