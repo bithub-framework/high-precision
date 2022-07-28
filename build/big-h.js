@@ -5,100 +5,96 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var BigDecimalH_1;
+var BigH_1;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.bigDecimalHFactory = exports.BigDecimalH = void 0;
+exports.bigHFactory = exports.BigH = void 0;
 const secretary_like_1 = require("secretary-like");
-const bigdecimal_js_1 = require("bigdecimal.js");
+const big_js_1 = require("big.js");
 const statically_implements_1 = require("./statically-implements");
-let BigDecimalH = BigDecimalH_1 = class BigDecimalH {
-    constructor(bigDecimal) {
-        this.bigDecimal = bigDecimal;
+let BigH = BigH_1 = class BigH {
+    constructor(big) {
+        this.big = big;
     }
     plus(source) {
-        const x = exports.bigDecimalHFactory.from(source);
-        return new BigDecimalH_1(this.bigDecimal.add(x.bigDecimal));
+        const x = exports.bigHFactory.from(source);
+        return new BigH_1(this.big.plus(x.big));
     }
     minus(source) {
-        const x = exports.bigDecimalHFactory.from(source);
-        return new BigDecimalH_1(this.bigDecimal.subtract(x.bigDecimal));
+        const x = exports.bigHFactory.from(source);
+        return new BigH_1(this.big.minus(x.big));
     }
     neg() {
-        return new BigDecimalH_1(this.bigDecimal.negate());
+        return new BigH_1(new big_js_1.Big(0).minus(this.big));
     }
     times(source) {
-        const x = exports.bigDecimalHFactory.from(source);
-        return new BigDecimalH_1(this.bigDecimal.multiply(x.bigDecimal));
+        const x = exports.bigHFactory.from(source);
+        return new BigH_1(this.big.times(x.big));
     }
-    div(source, scale = 0, roundingMode = secretary_like_1.H.RoundingMode.HALF_AWAY_FROM_ZERO) {
-        const x = exports.bigDecimalHFactory.from(source);
-        return new BigDecimalH_1(this.bigDecimal.divide(x.bigDecimal, scale, roundingMode === secretary_like_1.H.RoundingMode.AWAY_FROM_ZERO
-            ? bigdecimal_js_1.RoundingMode.UP
-            : roundingMode === secretary_like_1.H.RoundingMode.TOWARDS_ZERO
-                ? bigdecimal_js_1.RoundingMode.DOWN
-                : bigdecimal_js_1.RoundingMode.HALF_UP));
+    div(source, scale = 0) {
+        const x = exports.bigHFactory.from(source);
+        return new BigH_1(this.big.div(x.big).round(scale));
     }
     mod(source) {
-        const x = exports.bigDecimalHFactory.from(source);
-        return new BigDecimalH_1(this.bigDecimal.remainder(x.bigDecimal));
+        const x = exports.bigHFactory.from(source);
+        return new BigH_1(this.big.mod(x.big));
     }
     lt(source) {
-        const x = exports.bigDecimalHFactory.from(source);
-        return this.bigDecimal.compareTo(x.bigDecimal) < 0;
+        const x = exports.bigHFactory.from(source);
+        return this.big.lt(x.big);
     }
     lte(source) {
-        const x = exports.bigDecimalHFactory.from(source);
-        return this.bigDecimal.compareTo(x.bigDecimal) <= 0;
+        const x = exports.bigHFactory.from(source);
+        return this.big.lte(x.big);
     }
     gt(source) {
-        const x = exports.bigDecimalHFactory.from(source);
-        return this.bigDecimal.compareTo(x.bigDecimal) > 0;
+        const x = exports.bigHFactory.from(source);
+        return this.big.gt(x.big);
     }
     gte(source) {
-        const x = exports.bigDecimalHFactory.from(source);
-        return this.bigDecimal.compareTo(x.bigDecimal) >= 0;
+        const x = exports.bigHFactory.from(source);
+        return this.big.gte(x.big);
     }
     eq(source) {
-        const x = exports.bigDecimalHFactory.from(source);
-        return this.bigDecimal.compareTo(x.bigDecimal) === 0;
+        const x = exports.bigHFactory.from(source);
+        return this.big.eq(x.big);
     }
     neq(source) {
-        const x = exports.bigDecimalHFactory.from(source);
-        return this.bigDecimal.compareTo(x.bigDecimal) !== 0;
+        const x = exports.bigHFactory.from(source);
+        return !this.big.eq(x.big);
     }
     round(scale = 0, roundingMode = secretary_like_1.H.RoundingMode.HALF_AWAY_FROM_ZERO) {
-        return new BigDecimalH_1(this.bigDecimal.setScale(scale, roundingMode === secretary_like_1.H.RoundingMode.AWAY_FROM_ZERO
-            ? bigdecimal_js_1.RoundingMode.UP
+        return new BigH_1(new big_js_1.Big(this.big).round(scale, roundingMode === secretary_like_1.H.RoundingMode.AWAY_FROM_ZERO
+            ? big_js_1.Big.roundUp
             : roundingMode === secretary_like_1.H.RoundingMode.TOWARDS_ZERO
-                ? bigdecimal_js_1.RoundingMode.DOWN
-                : bigdecimal_js_1.RoundingMode.HALF_UP));
+                ? big_js_1.Big.roundDown
+                : big_js_1.Big.roundHalfUp));
     }
     toJSON() {
-        return this.bigDecimal.toString();
+        return this.big.toJSON();
     }
     toFixed(scale = 0) {
-        return this.bigDecimal.setScale(scale, bigdecimal_js_1.RoundingMode.DOWN).toString();
+        return this.big.toFixed(scale, big_js_1.Big.roundDown);
     }
     static max(x, ...rest) {
         return [x, ...rest]
-            .map(source => exports.bigDecimalHFactory.from(source))
+            .map(source => exports.bigHFactory.from(source))
             .reduce((x, y) => x.gt(y) ? x : y);
     }
     static min(x, ...rest) {
         return [x, ...rest]
-            .map(source => exports.bigDecimalHFactory.from(source))
+            .map(source => exports.bigHFactory.from(source))
             .reduce((x, y) => x.lt(y) ? x : y);
     }
 };
-BigDecimalH = BigDecimalH_1 = __decorate([
+BigH = BigH_1 = __decorate([
     (0, statically_implements_1.staticallyImplements)()
-], BigDecimalH);
-exports.BigDecimalH = BigDecimalH;
-class BigDecimalHFactory {
+], BigH);
+exports.BigH = BigH;
+class BigHFactory {
     from(source) {
-        if (source instanceof BigDecimalH)
+        if (source instanceof BigH)
             return source;
-        return new BigDecimalH((0, bigdecimal_js_1.Big)(source));
+        return new BigH(new big_js_1.Big(source));
     }
     capture(x) {
         return x.toJSON();
@@ -107,5 +103,5 @@ class BigDecimalHFactory {
         return this.from(snapshot);
     }
 }
-exports.bigDecimalHFactory = new BigDecimalHFactory();
+exports.bigHFactory = new BigHFactory();
 //# sourceMappingURL=big-h.js.map

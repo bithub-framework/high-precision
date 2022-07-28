@@ -1,147 +1,131 @@
 import { HLike, H, HStatic, HFactory } from 'secretary-like';
-import {
-	BigDecimal,
-	Big as createBigDecimal,
-	MC,
-	RoundingMode,
-} from 'bigdecimal.js';
+import { Big } from 'big.js';
 import { staticallyImplements } from './statically-implements';
 
 
-@staticallyImplements<HStatic<BigDecimalH>>()
-export class BigDecimalH implements HLike<BigDecimalH> {
+@staticallyImplements<HStatic<BigH>>()
+export class BigH implements HLike<BigH> {
 	public constructor(
-		private bigDecimal: BigDecimal,
+		private big: Big,
 	) { }
 
-	public plus(source: H.Source<BigDecimalH>): BigDecimalH {
-		const x = bigDecimalHFactory.from(source);
-		return new BigDecimalH(this.bigDecimal.add(x.bigDecimal));
+	public plus(source: H.Source<BigH>): BigH {
+		const x = bigHFactory.from(source);
+		return new BigH(this.big.plus(x.big));
 	}
 
-	public minus(source: H.Source<BigDecimalH>): BigDecimalH {
-		const x = bigDecimalHFactory.from(source);
-		return new BigDecimalH(this.bigDecimal.subtract(x.bigDecimal));
+	public minus(source: H.Source<BigH>): BigH {
+		const x = bigHFactory.from(source);
+		return new BigH(this.big.minus(x.big));
 	}
 
-	public neg(): BigDecimalH {
-		return new BigDecimalH(this.bigDecimal.negate());
+	public neg(): BigH {
+		return new BigH(new Big(0).minus(this.big));
 	}
 
-	public times(source: H.Source<BigDecimalH>): BigDecimalH {
-		const x = bigDecimalHFactory.from(source);
-		return new BigDecimalH(this.bigDecimal.multiply(x.bigDecimal));
+	public times(source: H.Source<BigH>): BigH {
+		const x = bigHFactory.from(source);
+		return new BigH(this.big.times(x.big));
 	}
 
 	public div(
-		source: H.Source<BigDecimalH>,
+		source: H.Source<BigH>,
 		scale = 0,
-		roundingMode: H.RoundingMode = H.RoundingMode.HALF_AWAY_FROM_ZERO,
-	): BigDecimalH {
-		const x = bigDecimalHFactory.from(source);
-		return new BigDecimalH(this.bigDecimal.divide(
-			x.bigDecimal,
-			scale,
-			roundingMode === H.RoundingMode.AWAY_FROM_ZERO
-				? RoundingMode.UP
-				: roundingMode === H.RoundingMode.TOWARDS_ZERO
-					? RoundingMode.DOWN
-					: RoundingMode.HALF_UP,
-		));
+	): BigH {
+		const x = bigHFactory.from(source);
+		return new BigH(this.big.div(x.big).round(scale));
 	}
 
-	public mod(source: H.Source<BigDecimalH>): BigDecimalH {
-		const x = bigDecimalHFactory.from(source);
-		return new BigDecimalH(this.bigDecimal.remainder(x.bigDecimal));
+	public mod(source: H.Source<BigH>): BigH {
+		const x = bigHFactory.from(source);
+		return new BigH(this.big.mod(x.big));
 	}
 
-	public lt(source: H.Source<BigDecimalH>): boolean {
-		const x = bigDecimalHFactory.from(source);
-		return this.bigDecimal.compareTo(x.bigDecimal) < 0;
+	public lt(source: H.Source<BigH>): boolean {
+		const x = bigHFactory.from(source);
+		return this.big.lt(x.big);
 	}
 
-	public lte(source: H.Source<BigDecimalH>): boolean {
-		const x = bigDecimalHFactory.from(source);
-		return this.bigDecimal.compareTo(x.bigDecimal) <= 0;
+	public lte(source: H.Source<BigH>): boolean {
+		const x = bigHFactory.from(source);
+		return this.big.lte(x.big);
 	}
 
-	public gt(source: H.Source<BigDecimalH>): boolean {
-		const x = bigDecimalHFactory.from(source);
-		return this.bigDecimal.compareTo(x.bigDecimal) > 0;
+	public gt(source: H.Source<BigH>): boolean {
+		const x = bigHFactory.from(source);
+		return this.big.gt(x.big);
 	}
 
-	public gte(source: H.Source<BigDecimalH>): boolean {
-		const x = bigDecimalHFactory.from(source);
-		return this.bigDecimal.compareTo(x.bigDecimal) >= 0;
+	public gte(source: H.Source<BigH>): boolean {
+		const x = bigHFactory.from(source);
+		return this.big.gte(x.big);
 	}
 
-	public eq(source: H.Source<BigDecimalH>): boolean {
-		const x = bigDecimalHFactory.from(source);
-		return this.bigDecimal.compareTo(x.bigDecimal) === 0;
+	public eq(source: H.Source<BigH>): boolean {
+		const x = bigHFactory.from(source);
+		return this.big.eq(x.big);
 	}
 
-	public neq(source: H.Source<BigDecimalH>): boolean {
-		const x = bigDecimalHFactory.from(source);
-		return this.bigDecimal.compareTo(x.bigDecimal) !== 0;
+	public neq(source: H.Source<BigH>): boolean {
+		const x = bigHFactory.from(source);
+		return !this.big.eq(x.big);
 	}
 
 	public round(
 		scale = 0,
 		roundingMode = H.RoundingMode.HALF_AWAY_FROM_ZERO
-	): BigDecimalH {
-		return new BigDecimalH(
-			this.bigDecimal.setScale(
-				scale,
-				roundingMode === H.RoundingMode.AWAY_FROM_ZERO
-					? RoundingMode.UP
-					: roundingMode === H.RoundingMode.TOWARDS_ZERO
-						? RoundingMode.DOWN
-						: RoundingMode.HALF_UP,
-			),
-		);
+	): BigH {
+		return new BigH(new Big(this.big).round(
+			scale,
+			roundingMode === H.RoundingMode.AWAY_FROM_ZERO
+				? Big.roundUp
+				: roundingMode === H.RoundingMode.TOWARDS_ZERO
+					? Big.roundDown
+					: Big.roundHalfUp,
+		));
 	}
 
 	public toJSON(): string {
-		return this.bigDecimal.toString();
+		return this.big.toJSON();
 	}
 
 	public toFixed(scale = 0): string {
-		return this.bigDecimal.setScale(
+		return this.big.toFixed(
 			scale,
-			RoundingMode.DOWN,
-		).toString();
+			Big.roundDown,
+		);
 	}
 
-	public static max(x: H.Source<BigDecimalH>, ...rest: H.Source<BigDecimalH>[]): BigDecimalH {
+	public static max(x: H.Source<BigH>, ...rest: H.Source<BigH>[]): BigH {
 		return [x, ...rest]
-			.map(source => bigDecimalHFactory.from(source))
+			.map(source => bigHFactory.from(source))
 			.reduce(
 				(x, y) => x.gt(y) ? x : y,
 			);
 	}
 
-	public static min(x: H.Source<BigDecimalH>, ...rest: H.Source<BigDecimalH>[]): BigDecimalH {
+	public static min(x: H.Source<BigH>, ...rest: H.Source<BigH>[]): BigH {
 		return [x, ...rest]
-			.map(source => bigDecimalHFactory.from(source))
+			.map(source => bigHFactory.from(source))
 			.reduce(
 				(x, y) => x.lt(y) ? x : y,
 			);
 	}
 }
 
-class BigDecimalHFactory implements HFactory<BigDecimalH> {
-	public from(source: H.Source<BigDecimalH>): BigDecimalH {
-		if (source instanceof BigDecimalH) return source;
-		return new BigDecimalH(createBigDecimal(source));
+class BigHFactory implements HFactory<BigH> {
+	public from(source: H.Source<BigH>): BigH {
+		if (source instanceof BigH) return source;
+		return new BigH(new Big(source));
 	}
 
-	public capture(x: BigDecimalH): H.Snapshot {
+	public capture(x: BigH): H.Snapshot {
 		return x.toJSON();
 	}
 
-	public restore(snapshot: H.Snapshot): BigDecimalH {
+	public restore(snapshot: H.Snapshot): BigH {
 		return this.from(snapshot);
 	}
 }
 
-export const bigDecimalHFactory: HFactory<BigDecimalH> = new BigDecimalHFactory();
+export const bigHFactory: HFactory<BigH> = new BigHFactory();
