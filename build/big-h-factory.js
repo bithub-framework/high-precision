@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BigHFactory = void 0;
+exports.bigHFactory = void 0;
 const big_h_1 = require("./big-h");
 const big_js_1 = require("big.js");
 class BigHFactory {
@@ -16,5 +16,5 @@ class BigHFactory {
         return this.from(snapshot);
     }
 }
-exports.BigHFactory = BigHFactory;
+exports.bigHFactory = new BigHFactory();
 //# sourceMappingURL=big-h-factory.js.map

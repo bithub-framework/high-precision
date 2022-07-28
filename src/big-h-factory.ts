@@ -3,7 +3,7 @@ import { Big } from 'big.js';
 import { HFactory, H } from 'secretary-like';
 
 
-export class BigHFactory implements HFactory<BigH> {
+class BigHFactory implements HFactory<BigH> {
 	public from(source: H.Source<BigH>): BigH {
 		if (source instanceof BigH) return source;
 		return new BigH(new Big(source));
@@ -17,3 +17,5 @@ export class BigHFactory implements HFactory<BigH> {
 		return this.from(snapshot);
 	}
 }
+
+export const bigHFactory: HFactory<BigH> = new BigHFactory();
