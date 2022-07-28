@@ -21,4 +21,4 @@ export declare class BigDecimalH implements HLike<BigDecimalH> {
     static max(x: H.Source<BigDecimalH>, ...rest: H.Source<BigDecimalH>[]): BigDecimalH;
     static min(x: H.Source<BigDecimalH>, ...rest: H.Source<BigDecimalH>[]): BigDecimalH;
 }
-export declare const bigHFactory: HFactory<BigDecimalH>;
+export declare const bigDecimalHFactory: HFactory<BigDecimalH>;
