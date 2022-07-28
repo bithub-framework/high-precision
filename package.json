@@ -14,6 +14,7 @@
   "dependencies": {
     "@types/big.js": "^6.1.3",
     "big.js": "^6.1.1",
+    "bigdecimal.js": "^1.2.0",
     "secretary-like": "file:../secretary-like"
   }
 }
