@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 var BigH_1;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BigH = void 0;
+exports.bigHFactory = exports.BigH = void 0;
 const secretary_like_1 = require("secretary-like");
 const big_js_1 = require("big.js");
 const statically_implements_1 = require("./statically-implements");
@@ -15,84 +15,51 @@ let BigH = BigH_1 = class BigH {
     constructor(big) {
         this.big = big;
     }
-    plus(x) {
-        if (typeof x === 'number')
-            return new BigH_1(this.big.plus(x));
-        if (typeof x === 'string')
-            return new BigH_1(this.big.plus(x));
+    plus(source) {
+        const x = exports.bigHFactory.from(source);
         return new BigH_1(this.big.plus(x.big));
     }
-    minus(x) {
-        if (typeof x === 'number')
-            return new BigH_1(this.big.minus(x));
-        if (typeof x === 'string')
-            return new BigH_1(this.big.minus(x));
+    minus(source) {
+        const x = exports.bigHFactory.from(source);
         return new BigH_1(this.big.minus(x.big));
     }
     neg() {
         return new BigH_1(new big_js_1.Big(0).minus(this.big));
     }
-    times(x) {
-        if (typeof x === 'number')
-            return new BigH_1(this.big.times(x));
-        if (typeof x === 'string')
-            return new BigH_1(this.big.times(x));
+    times(source) {
+        const x = exports.bigHFactory.from(source);
         return new BigH_1(this.big.times(x.big));
     }
-    div(x) {
-        if (typeof x === 'number')
-            return new BigH_1(this.big.div(x));
-        if (typeof x === 'string')
-            return new BigH_1(this.big.div(x));
+    div(source) {
+        const x = exports.bigHFactory.from(source);
         return new BigH_1(this.big.div(x.big));
     }
-    mod(x) {
-        if (typeof x === 'number')
-            return new BigH_1(this.big.mod(x));
-        if (typeof x === 'string')
-            return new BigH_1(this.big.mod(x));
+    mod(source) {
+        const x = exports.bigHFactory.from(source);
         return new BigH_1(this.big.mod(x.big));
     }
-    lt(x) {
-        if (typeof x === 'number')
-            return this.big.lt(x);
-        if (typeof x === 'string')
-            return this.big.lt(x);
+    lt(source) {
+        const x = exports.bigHFactory.from(source);
         return this.big.lt(x.big);
     }
-    lte(x) {
-        if (typeof x === 'number')
-            return this.big.lte(x);
-        if (typeof x === 'string')
-            return this.big.lte(x);
+    lte(source) {
+        const x = exports.bigHFactory.from(source);
         return this.big.lte(x.big);
     }
-    gt(x) {
-        if (typeof x === 'number')
-            return this.big.gt(x);
-        if (typeof x === 'string')
-            return this.big.gt(x);
+    gt(source) {
+        const x = exports.bigHFactory.from(source);
         return this.big.gt(x.big);
     }
-    gte(x) {
-        if (typeof x === 'number')
-            return this.big.gte(x);
-        if (typeof x === 'string')
-            return this.big.gte(x);
+    gte(source) {
+        const x = exports.bigHFactory.from(source);
         return this.big.gte(x.big);
     }
-    eq(x) {
-        if (typeof x === 'number')
-            return this.big.eq(x);
-        if (typeof x === 'string')
-            return this.big.eq(x);
+    eq(source) {
+        const x = exports.bigHFactory.from(source);
         return this.big.eq(x.big);
     }
-    neq(x) {
-        if (typeof x === 'number')
-            return !this.big.eq(x);
-        if (typeof x === 'string')
-            return !this.big.eq(x);
+    neq(source) {
+        const x = exports.bigHFactory.from(source);
         return !this.big.eq(x.big);
     }
     round(decimalPoint = 0, roundingMode = secretary_like_1.H.RoundingMode.HALF_AWAY_FROM_ZERO) {
@@ -109,14 +76,32 @@ let BigH = BigH_1 = class BigH {
         return this.big.toFixed(decimalPoint, big_js_1.Big.roundDown);
     }
     static max(x, ...rest) {
-        return [x, ...rest].reduce((x, y) => x.gt(y) ? x : y);
+        return [x, ...rest]
+            .map(source => exports.bigHFactory.from(source))
+            .reduce((x, y) => x.gt(y) ? x : y);
     }
     static min(x, ...rest) {
-        return [x, ...rest].reduce((x, y) => x.lt(y) ? x : y);
+        return [x, ...rest]
+            .map(source => exports.bigHFactory.from(source))
+            .reduce((x, y) => x.lt(y) ? x : y);
     }
 };
 BigH = BigH_1 = __decorate([
     (0, statically_implements_1.staticallyImplements)()
 ], BigH);
 exports.BigH = BigH;
+class BigHFactory {
+    from(source) {
+        if (source instanceof BigH)
+            return source;
+        return new BigH(new big_js_1.Big(source));
+    }
+    capture(x) {
+        return x.toJSON();
+    }
+    restore(snapshot) {
+        return this.from(snapshot);
+    }
+}
+exports.bigHFactory = new BigHFactory();
 //# sourceMappingURL=big-h.js.map

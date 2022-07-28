@@ -1,4 +1,4 @@
-import { HLike, H, HStatic } from 'secretary-like';
+import { HLike, H, HStatic, HFactory } from 'secretary-like';
 import { Big } from 'big.js';
 import { staticallyImplements } from './statically-implements';
 
@@ -9,15 +9,13 @@ export class BigH implements HLike<BigH> {
 		private big: Big,
 	) { }
 
-	public plus(x: H.Source<BigH>): BigH {
-		if (typeof x === 'number') return new BigH(this.big.plus(x));
-		if (typeof x === 'string') return new BigH(this.big.plus(x));
+	public plus(source: H.Source<BigH>): BigH {
+		const x = bigHFactory.from(source);
 		return new BigH(this.big.plus(x.big));
 	}
 
-	public minus(x: H.Source<BigH>): BigH {
-		if (typeof x === 'number') return new BigH(this.big.minus(x));
-		if (typeof x === 'string') return new BigH(this.big.minus(x));
+	public minus(source: H.Source<BigH>): BigH {
+		const x = bigHFactory.from(source);
 		return new BigH(this.big.minus(x.big));
 	}
 
@@ -25,57 +23,48 @@ export class BigH implements HLike<BigH> {
 		return new BigH(new Big(0).minus(this.big));
 	}
 
-	public times(x: H.Source<BigH>): BigH {
-		if (typeof x === 'number') return new BigH(this.big.times(x));
-		if (typeof x === 'string') return new BigH(this.big.times(x));
+	public times(source: H.Source<BigH>): BigH {
+		const x = bigHFactory.from(source);
 		return new BigH(this.big.times(x.big));
 	}
 
-	public div(x: H.Source<BigH>): BigH {
-		if (typeof x === 'number') return new BigH(this.big.div(x));
-		if (typeof x === 'string') return new BigH(this.big.div(x));
+	public div(source: H.Source<BigH>): BigH {
+		const x = bigHFactory.from(source);
 		return new BigH(this.big.div(x.big));
 	}
 
-	public mod(x: H.Source<BigH>): BigH {
-		if (typeof x === 'number') return new BigH(this.big.mod(x));
-		if (typeof x === 'string') return new BigH(this.big.mod(x));
+	public mod(source: H.Source<BigH>): BigH {
+		const x = bigHFactory.from(source);
 		return new BigH(this.big.mod(x.big));
 	}
 
-	public lt(x: H.Source<BigH>): boolean {
-		if (typeof x === 'number') return this.big.lt(x);
-		if (typeof x === 'string') return this.big.lt(x);
+	public lt(source: H.Source<BigH>): boolean {
+		const x = bigHFactory.from(source);
 		return this.big.lt(x.big);
 	}
 
-	public lte(x: H.Source<BigH>): boolean {
-		if (typeof x === 'number') return this.big.lte(x);
-		if (typeof x === 'string') return this.big.lte(x);
+	public lte(source: H.Source<BigH>): boolean {
+		const x = bigHFactory.from(source);
 		return this.big.lte(x.big);
 	}
 
-	public gt(x: H.Source<BigH>): boolean {
-		if (typeof x === 'number') return this.big.gt(x);
-		if (typeof x === 'string') return this.big.gt(x);
+	public gt(source: H.Source<BigH>): boolean {
+		const x = bigHFactory.from(source);
 		return this.big.gt(x.big);
 	}
 
-	public gte(x: H.Source<BigH>): boolean {
-		if (typeof x === 'number') return this.big.gte(x);
-		if (typeof x === 'string') return this.big.gte(x);
+	public gte(source: H.Source<BigH>): boolean {
+		const x = bigHFactory.from(source);
 		return this.big.gte(x.big);
 	}
 
-	public eq(x: H.Source<BigH>): boolean {
-		if (typeof x === 'number') return this.big.eq(x);
-		if (typeof x === 'string') return this.big.eq(x);
+	public eq(source: H.Source<BigH>): boolean {
+		const x = bigHFactory.from(source);
 		return this.big.eq(x.big);
 	}
 
-	public neq(x: H.Source<BigH>): boolean {
-		if (typeof x === 'number') return !this.big.eq(x);
-		if (typeof x === 'string') return !this.big.eq(x);
+	public neq(source: H.Source<BigH>): boolean {
+		const x = bigHFactory.from(source);
 		return !this.big.eq(x.big);
 	}
 
@@ -104,27 +93,36 @@ export class BigH implements HLike<BigH> {
 		);
 	}
 
-	public static max(x: BigH, ...rest: BigH[]): BigH {
-		return [x, ...rest].reduce(
-			(x, y) => x.gt(y) ? x : y,
-		);
+	public static max(x: H.Source<BigH>, ...rest: H.Source<BigH>[]): BigH {
+		return [x, ...rest]
+			.map(source => bigHFactory.from(source))
+			.reduce(
+				(x, y) => x.gt(y) ? x : y,
+			);
 	}
 
-	public static min(x: BigH, ...rest: BigH[]): BigH {
-		return [x, ...rest].reduce(
-			(x, y) => x.lt(y) ? x : y,
-		);
+	public static min(x: H.Source<BigH>, ...rest: H.Source<BigH>[]): BigH {
+		return [x, ...rest]
+			.map(source => bigHFactory.from(source))
+			.reduce(
+				(x, y) => x.lt(y) ? x : y,
+			);
 	}
-
-	// private capture(): H.Snapshot {
-	// 	return this.big.toJSON();
-	// }
-
-	// public static capture(x: BigH): H.Snapshot {
-	// 	return x.capture();
-	// }
-
-	// public static restore(s: H.Snapshot): BigH {
-	// 	return new BigH(new Big(s));
-	// }
 }
+
+class BigHFactory implements HFactory<BigH> {
+	public from(source: H.Source<BigH>): BigH {
+		if (source instanceof BigH) return source;
+		return new BigH(new Big(source));
+	}
+
+	public capture(x: BigH): H.Snapshot {
+		return x.toJSON();
+	}
+
+	public restore(snapshot: H.Snapshot): BigH {
+		return this.from(snapshot);
+	}
+}
+
+export const bigHFactory: HFactory<BigH> = new BigHFactory();
