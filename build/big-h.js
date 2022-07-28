@@ -12,11 +12,8 @@ const secretary_like_1 = require("secretary-like");
 const big_js_1 = require("big.js");
 const statically_implements_1 = require("./statically-implements");
 let BigH = BigH_1 = class BigH {
-    constructor(source) {
-        if (source instanceof BigH_1)
-            this.big = source.big;
-        else
-            this.big = new big_js_1.Big(source);
+    constructor(big) {
+        this.big = big;
     }
     plus(x) {
         if (typeof x === 'number')

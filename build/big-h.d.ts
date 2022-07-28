@@ -2,7 +2,7 @@ import { HLike, H } from 'secretary-like';
 import { Big } from 'big.js';
 export declare class BigH implements HLike<BigH> {
     private big;
-    constructor(source: H.Source<BigH> | Big);
+    constructor(big: Big);
     plus(x: H.Source<BigH>): BigH;
     minus(x: H.Source<BigH>): BigH;
     neg(): BigH;

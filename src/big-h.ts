@@ -5,14 +5,9 @@ import { staticallyImplements } from './statically-implements';
 
 @staticallyImplements<HStatic<BigH>>()
 export class BigH implements HLike<BigH> {
-	private big: Big;
-
-	public constructor(source: H.Source<BigH> | Big) {
-		if (source instanceof BigH)
-			this.big = source.big;
-		else
-			this.big = new Big(source);
-	}
+	public constructor(
+		private big: Big,
+	) { }
 
 	public plus(x: H.Source<BigH>): BigH {
 		if (typeof x === 'number') return new BigH(this.big.plus(x));
